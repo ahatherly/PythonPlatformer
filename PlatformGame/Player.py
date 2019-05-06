@@ -5,10 +5,11 @@ class Player(pygame.sprite.Sprite):
 	x = 0
 	y = 0
 	animation_state = 0
-	animation_delay = 3
+	animation_delay = 2
 	animation_delay_count = 0
 	walking = True
-	speed = 1
+	facingRight = True
+	speed = 5
 
 	walkImages = []
 
@@ -49,21 +50,30 @@ class Player(pygame.sprite.Sprite):
 				self.animation_state = self.animation_state + 1
 				if self.animation_state > 10:
 					self.animation_state = 0;
-				self.image = self.walkImages[self.animation_state]
+				# Set the sprite image
+				if self.facingRight:
+					self.image = self.walkImages[self.animation_state]
+				else:
+					self.image = pygame.transform.flip(self.walkImages[self.animation_state], True, False)
 				# Set our transparent color
 				self.image.set_colorkey(TRANSCOLOUR)
 			else:
 				self.animation_delay_count = self.animation_delay_count + 1
 		else:
 			self.animation_state = 0;
-			self.image = self.walkImages[self.animation_state]
+			if self.facingRight:
+				self.image = self.walkImages[self.animation_state]
+			else:
+				self.image = pygame.transform.flip(self.walkImages[self.animation_state], True, False)
 			# Set our transparent color
 			self.image.set_colorkey(TRANSCOLOUR)
 
 	def right(self):
-		player.walking = True
-		self.x = self.x + self.speed
+		self.walking = True
+		self.facingRight = True
+		self.rect.x = self.rect.x + self.speed
 	
 	def left(self):
-		player.walking = True
-		self.x = self.x - self.speed
+		self.walking = True
+		self.facingRight = False
+		self.rect.x = self.rect.x - self.speed

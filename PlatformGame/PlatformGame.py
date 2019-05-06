@@ -83,9 +83,9 @@ while not done:
             done = True
  
 	# Check keyboard input
-    if pygame.key.get_pressed()[K_a]:
+    if pygame.key.get_pressed()[pygame.K_a]:
         player.left()
-    elif pygame.key.get_pressed()[K_d]:
+    elif pygame.key.get_pressed()[pygame.K_d]:
         player.right()
     else:
         player.walking = False;
