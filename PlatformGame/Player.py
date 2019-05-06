@@ -75,9 +75,9 @@ class Player(pygame.sprite.Sprite):
 	def right(self):
 		self.walking = True
 		self.facingRight = True
-		self.rect.x = self.rect.x + self.speed
+		#self.rect.x = self.rect.x + self.speed
 	
 	def left(self):
 		self.walking = True
 		self.facingRight = False
-		self.rect.x = self.rect.x - self.speed
+		#self.rect.x = self.rect.x - self.speed

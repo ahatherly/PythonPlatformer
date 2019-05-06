@@ -4,11 +4,18 @@ class Block(pygame.sprite.Sprite):
     """
     This class represents a sprite on the screen.
     """
-    def __init__(self, code): 
+
+    start_x = 0
+    start_y = 0
+
+    def __init__(self, code, x, y): 
 
         # Call the parent class (Sprite) constructor
         super().__init__()
  
+        self.start_x = x
+        self.start_y = y
+
         #self.image = pygame.image.load("./Assets/Tiles/box.png").convert()
         t = TILELIST[code]
         self.image = t.load_sprite()
@@ -58,3 +65,10 @@ TILELIST["W"] = Tiles("W", "liquidWater.png", True)
 TILELIST["r"] = Tiles("r", "grassCliffRight.png")
 TILELIST["¬"] = Tiles("¬", "grassCliffLeft.png")
 TILELIST["b"] = Tiles("b", "bridgeLogsFlipped.png")
+TILELIST["#"] = Tiles("#", "grassCenter.png")
+TILELIST["("] = Tiles("(", "grassLeft.png")
+TILELIST[")"] = Tiles(")", "grassRight.png")
+TILELIST["<"] = Tiles("<", "signLeft.png", False, False)
+TILELIST[">"] = Tiles(">", "signRight.png", False, False)
+TILELIST["/"] = Tiles("/", "grassHillLeft.png")
+TILELIST["\\"] = Tiles("\\", "grassHillRight.png")
