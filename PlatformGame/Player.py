@@ -43,6 +43,10 @@ class Player(pygame.sprite.Sprite):
 		self.rect.x = (self.x*BLOCK_SIZE)
 		self.rect.y = (self.y*BLOCK_SIZE-25)
 
+	def reset(self, x, y):
+		self.rect.x = (self.x*BLOCK_SIZE)
+		self.rect.y = (self.y*BLOCK_SIZE-25)
+
 	def update(self):
 		if self.walking:
 			if self.animation_delay_count == self.animation_delay:

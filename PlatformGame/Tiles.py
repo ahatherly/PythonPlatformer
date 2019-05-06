@@ -1,14 +1,38 @@
 import pygame
 
+class Block(pygame.sprite.Sprite):
+    """
+    This class represents a sprite on the screen.
+    """
+    def __init__(self, code): 
+
+        # Call the parent class (Sprite) constructor
+        super().__init__()
+ 
+        #self.image = pygame.image.load("./Assets/Tiles/box.png").convert()
+        t = TILELIST[code]
+        self.image = t.load_sprite()
+        self.tileDef = t
+        
+		# Set our transparent color
+        self.image.set_colorkey(TRANSCOLOUR)
+        # Update the position of this object by setting the values
+        # of rect.x and rect.y
+        self.rect = self.image.get_rect()
+
 class Tiles:
 
 	filePath = "./Assets/Tiles/"
 	code = " "
 	filename = ""
+	deadly = False
+	obstacle = True
 
-	def __init__(self, code, filename):
+	def __init__(self, code, filename, deadly = False, obstacle = True):
 		self.code = code
 		self.filename = filename
+		self.deadly = deadly
+		self.obstacle = obstacle
 
 	def load_sprite(self):
 		return pygame.image.load(self.filePath + self.filename).convert()
@@ -24,12 +48,13 @@ class Background(pygame.sprite.Sprite):
 TRANSCOLOUR = (0, 0, 0, 255)
 BLOCK_SIZE = 70
 WHITE = (255, 255, 255)
+BLACK = (0, 0, 0)
 
 TILELIST = {}
-TILELIST["T"] = Tiles("T", "tochLit.png")
+TILELIST["T"] = Tiles("T", "tochLit.png", False, False)
 TILELIST["="] = Tiles("=", "grassMid.png")
-TILELIST["w"] = Tiles("w", "liquidWaterTop.png")
-TILELIST["W"] = Tiles("W", "liquidWater.png")
+TILELIST["w"] = Tiles("w", "liquidWaterTop.png", True)
+TILELIST["W"] = Tiles("W", "liquidWater.png", True)
 TILELIST["r"] = Tiles("r", "grassCliffRight.png")
 TILELIST["¬"] = Tiles("¬", "grassCliffLeft.png")
 TILELIST["b"] = Tiles("b", "bridgeLogsFlipped.png")
