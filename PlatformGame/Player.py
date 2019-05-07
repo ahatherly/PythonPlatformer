@@ -47,11 +47,13 @@ class Player(pygame.sprite.Sprite):
 		self.rect.x = (self.x*BLOCK_SIZE)
 		self.rect.y = (self.y*BLOCK_SIZE-25)
 
-	def update(self):
+	def update(self, sounds):
 		if self.walking:
 			if self.animation_delay_count == self.animation_delay:
 				self.animation_delay_count = 0
 				self.animation_state = self.animation_state + 1
+				if self.animation_state % 2 == 0:
+				    sounds.walk()
 				if self.animation_state > 10:
 					self.animation_state = 0;
 				# Set the sprite image

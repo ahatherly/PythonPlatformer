@@ -7,9 +7,12 @@ import random
 from Tiles import Tiles, Block, Background, TILELIST, TRANSCOLOUR, BLOCK_SIZE, WHITE, BLACK
 from Levels import Levels
 from Player import Player
+from Sounds import Sounds
 
 # Initialize Pygame
+sounds = Sounds()
 pygame.init()
+
 
 # Set the height and width of the screen
 screen_width = 1100
@@ -54,6 +57,7 @@ clock = pygame.time.Clock()
  
 score = 0
 jumping = 0
+falling = False
 
 # -------- Main Program Loop -----------
 while not done:
@@ -80,7 +84,10 @@ while not done:
         if down_collision_rect.colliderect(t.rect):
             td = t.tileDef
             if td.obstacle:
+                if falling == True:
+                    sounds.land()
                 touching_floor = True
+                falling = False
             if td.deadly:
                 touched_deadly = True
         if left_collision_rect.colliderect(t.rect):
@@ -99,6 +106,7 @@ while not done:
     #### Gravity ##########
     if touching_floor == False:
        player.rect.y = player.rect.y + gravity
+       falling = True
 
 	####### Check keyboard input ############
     if pygame.key.get_pressed()[pygame.K_a] and touching_left == False:
@@ -113,6 +121,7 @@ while not done:
     if pygame.key.get_pressed()[pygame.K_w]:
         if touching_floor:
             jumping = 20
+            sounds.jump()
     if pygame.key.get_pressed()[pygame.K_ESCAPE]:
         done = True
     
@@ -123,6 +132,7 @@ while not done:
 
 	#### Check for deadly items ########
     if touched_deadly:
+        sounds.dead()
         player.reset(5, 7)
         level_x_offset = start_level_x_offset
 
@@ -132,7 +142,7 @@ while not done:
     # Add the background
     screen.blit(backGround.image, backGround.rect)
     # Draw all the spites
-    all_sprites_list.update()
+    all_sprites_list.update(sounds)
     all_sprites_list.draw(screen)
     # Draw collision detectors (troubleshooting)
     #pygame.draw.rect(screen, BLACK, down_collision_rect)
