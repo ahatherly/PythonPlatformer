@@ -10,6 +10,12 @@ class Player(pygame.sprite.Sprite):
 	walking = True
 	facingRight = True
 	speed = 5
+	lives = 3
+	energy = 3
+	invulnerable = 0
+	total_invulnerable = 120
+	flash_delay = 10
+	total_flash_delay = 10
 
 	walkImages = []
 
@@ -32,6 +38,7 @@ class Player(pygame.sprite.Sprite):
 		self.walkImages.append(pygame.image.load("./Assets/Player/p1_walk/PNG/p1_walk09.png").convert())
 		self.walkImages.append(pygame.image.load("./Assets/Player/p1_walk/PNG/p1_walk10.png").convert())
 		self.walkImages.append(pygame.image.load("./Assets/Player/p1_walk/PNG/p1_walk11.png").convert())
+		self.transparentImage = pygame.image.load("./Assets/transparent.png").convert()
 
 		self.image = self.walkImages[self.animation_state]
 		# Set our transparent color
@@ -73,6 +80,16 @@ class Player(pygame.sprite.Sprite):
 				self.image = pygame.transform.flip(self.walkImages[self.animation_state], True, False)
 			# Set our transparent color
 			self.image.set_colorkey(TRANSCOLOUR)
+		# Temporarily invulnerable - flash on and off
+		if self.invulnerable > 0:
+			self.invulnerable = self.invulnerable - 1
+			self.flash_delay = self.flash_delay - 1
+			if self.flash_delay == 0:
+				self.flash_delay = self.total_flash_delay
+			if self.flash_delay < (self.total_flash_delay / 2):
+				self.image = self.transparentImage
+				# Set our transparent color
+				self.image.set_colorkey(TRANSCOLOUR)
 
 	def right(self):
 		self.walking = True
@@ -83,3 +100,19 @@ class Player(pygame.sprite.Sprite):
 		self.walking = True
 		self.facingRight = False
 		#self.rect.x = self.rect.x - self.speed
+
+	def dead(self, sounds, level):
+		sounds.dead()
+		self.lives = self.lives - 1
+		self.energy = 3
+		self.reset(5, 7)
+		level.level_x_offset = level.start_level_x_offset
+
+	def energyDown(self, sounds, level):
+		self.energy = self.energy - 1
+		if self.energy == 0:
+			self.invulnerable = 10
+			self.dead(sounds, level)
+		else:
+			sounds.damage()
+			self.invulnerable = self.total_invulnerable

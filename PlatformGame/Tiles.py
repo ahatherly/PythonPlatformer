@@ -22,24 +22,36 @@ class Block(pygame.sprite.Sprite):
         self.tileDef = t
         
 		# Set our transparent color
-        self.image.set_colorkey(TRANSCOLOUR)
+        if t.itemType == "Key":
+            transColor = ITEMTRANSCOLOUR
+        else:
+            transColor = TRANSCOLOUR
+        
+        self.image.set_colorkey(transColor)
         # Update the position of this object by setting the values
         # of rect.x and rect.y
         self.rect = self.image.get_rect()
 
 class Tiles:
 
-	filePath = "./Assets/Tiles/"
+	filePath = "./Assets/"
 	code = " "
 	filename = ""
 	deadly = False
 	obstacle = True
+	climbable = False
+	enemy = False
+	itemType = ""
+	itemIndex = 0
 
-	def __init__(self, code, filename, deadly = False, obstacle = True):
+	def __init__(self, code, filename, deadly = False, obstacle = True, climbable = False, itemType = "", itemIndex = 0):
 		self.code = code
 		self.filename = filename
 		self.deadly = deadly
 		self.obstacle = obstacle
+		self.climable = climbable
+		self.itemType = itemType
+		self.itemIndex = itemIndex
 
 	def load_sprite(self):
 		return pygame.image.load(self.filePath + self.filename).convert()
@@ -53,22 +65,27 @@ class Background(pygame.sprite.Sprite):
         self.rect.top = 0
 
 TRANSCOLOUR = (0, 0, 0, 255)
+ITEMTRANSCOLOUR = (255, 255, 255, 255)
 BLOCK_SIZE = 70
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 
 TILELIST = {}
-TILELIST["T"] = Tiles("T", "tochLit.png", False, False)
-TILELIST["="] = Tiles("=", "grassMid.png")
-TILELIST["w"] = Tiles("w", "liquidWaterTop.png", True)
-TILELIST["W"] = Tiles("W", "liquidWater.png", True)
-TILELIST["r"] = Tiles("r", "grassCliffRight.png")
-TILELIST["¬"] = Tiles("¬", "grassCliffLeft.png")
-TILELIST["b"] = Tiles("b", "bridgeLogsFlipped.png")
-TILELIST["#"] = Tiles("#", "grassCenter.png")
-TILELIST["("] = Tiles("(", "grassLeft.png")
-TILELIST[")"] = Tiles(")", "grassRight.png")
-TILELIST["<"] = Tiles("<", "signLeft.png", False, False)
-TILELIST[">"] = Tiles(">", "signRight.png", False, False)
-TILELIST["/"] = Tiles("/", "grassHillLeft.png")
-TILELIST["\\"] = Tiles("\\", "grassHillRight.png")
+TILELIST["T"] = Tiles("T", "Tiles/tochLit.png", False, False)
+TILELIST["="] = Tiles("=", "Tiles/grassMid.png")
+TILELIST["w"] = Tiles("w", "Tiles/liquidWaterTop.png", True)
+TILELIST["W"] = Tiles("W", "Tiles/liquidWater.png", True)
+TILELIST["r"] = Tiles("r", "Tiles/grassCliffRight.png")
+TILELIST["¬"] = Tiles("¬", "Tiles/grassCliffLeft.png")
+TILELIST["b"] = Tiles("b", "Tiles/bridgeLogsFlipped.png")
+TILELIST["#"] = Tiles("#", "Tiles/grassCenter.png")
+TILELIST["("] = Tiles("(", "Tiles/grassLeft.png")
+TILELIST[")"] = Tiles(")", "Tiles/grassRight.png")
+TILELIST["<"] = Tiles("<", "Tiles/signLeft.png", False, False)
+TILELIST[">"] = Tiles(">", "Tiles/signRight.png", False, False)
+TILELIST["/"] = Tiles("/", "Tiles/grassHillLeft.png")
+TILELIST["\\"] = Tiles("\\", "Tiles/grassHillRight.png")
+TILELIST["|"] = Tiles("|", "Tiles/ladder_mid.png", False, False, True)
+TILELIST["^"] = Tiles("^", "Tiles/ladder_top.png", False, False, True)
+TILELIST["k"] = Tiles("k", "Items/keyYellow.png", False, False, False, "Key", 1)
+
