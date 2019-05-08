@@ -1,11 +1,26 @@
-##########             
-########               
-#######           
-#######
-####### k      ¬=======r ¬=r  =
-#######====r                  #=^==)
-#######                         |
-#######                         |
-#######          >  s         (===)
-#######=rbbb¬r  ¬======r  ¬===#####)
-####WWWWWWWWWWWWWWWWWWWWWWWW#########################################################################################################################
+!   Empty lines, and lines starting with a ! will be ignored
+!   Lines starting with a number define the movement of enemies
+
+
+##########                        ###          #            #
+########                           #        c  #    e       #
+#######                            #==|=) (====# |=====)    #
+#######         2                     |          |     #    #
+####### k      ¬=======r ¬=r  =    l  |       (===)    #=   #
+#######====r                  #=^===========)           #===#
+#######                         |              3    =       #
+#######                         |         (=========#)      #
+#######          >  1         (===)WWWWWWWWWWWWWWWWW##)     #
+#######=rbbb¬r  ¬======r  ¬===#####)WWWWWWWWWWWWWWWW###)    #
+####WWWWWWWWWWWWWWWWWWWWWWWW########WWWWWWWWWWWWWWWW#########
+
+!   Enemy movement. Each row has the following values:
+!   ABCDE
+!     A = Enemy number
+!     B = Number of squares left the enemy can move
+!     C = Number of squares right the enemy can move
+!     D = Movement speed
+!     E = Enemy sprite type (a=Slime, b=Fly)
+1432a
+2174b
+3542a

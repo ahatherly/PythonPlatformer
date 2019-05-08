@@ -10,6 +10,7 @@ from Player import Player
 from Sounds import Sounds
 from Hud import Hud
 from Enemies import Enemy
+from Items import Item, ITEM_CODES
 
 # Initialize Pygame
 sounds = Sounds()
@@ -22,8 +23,10 @@ screen_height = 770
 screen = pygame.display.set_mode([screen_width, screen_height])
 gravity = 7
 
+enemies = {}
+
 level = Levels()
-level.loadLevel("Level1.txt")
+level.loadLevel("Level1.txt", enemies)
  
 block_list = pygame.sprite.Group()
 # This is a list of every sprite. 
@@ -36,12 +39,19 @@ for y in range(0,level.getHeight()):
 	for x in range(0,level.getWidth()):
 		code = level.getTile(x, y)
 		if code != " ":
-			if code == "s":
-				enemy = Enemy(code, x*BLOCK_SIZE, y*BLOCK_SIZE)
-				enemy.rect.x = (x*BLOCK_SIZE) + level.level_x_offset
-				enemy.rect.y = (y*BLOCK_SIZE) + 44
-				enemies_list.add(enemy)
-				all_sprites_list.add(enemy)
+			if code.isdigit():
+				enemies[code].create(x*BLOCK_SIZE, y*BLOCK_SIZE)
+				enemies[code].rect.x = enemies[code].x + level.level_x_offset
+				enemies[code].rect.y = enemies[code].y
+				enemies_list.add(enemies[code])
+				#all_sprites_list.add(enemies[code])
+			elif code in ITEM_CODES:
+				item = Item(code, x*BLOCK_SIZE, y*BLOCK_SIZE)
+				item.rect.x = (x*BLOCK_SIZE) + level.level_x_offset
+				item.rect.y = (y*BLOCK_SIZE)
+				# Add the block to the list of objects
+				block_list.add(item)
+				all_sprites_list.add(item)
 			else:
 				# This represents a block
 				block = Block(code, x*BLOCK_SIZE, y*BLOCK_SIZE)
@@ -54,6 +64,7 @@ for y in range(0,level.getHeight()):
 # Add the player
 player = Player(5,7)
 all_sprites_list.add(player)
+all_sprites_list.add(enemies_list.sprites())
 
 # Add the HUD
 hud = Hud(player, all_sprites_list)
@@ -107,22 +118,29 @@ while not done:
                 falling = False
             if td.deadly:
                 touched_deadly = True
+            if td.item:
+                t.touched(hud, all_sprites_list, sounds)
         if left_collision_rect.colliderect(t.rect):
             td = t.tileDef
             if td.obstacle:
                 touching_left = True
             if td.deadly:
                 touched_deadly = True
+            if td.item:
+                t.touched(hud, all_sprites_list, sounds)
         if right_collision_rect.colliderect(t.rect):
             td = t.tileDef
             if td.obstacle:
                 touching_right = True
             if td.deadly:
                 touched_deadly = True
+            if td.item:
+                t.touched(hud, all_sprites_list, sounds)
         if ladder_collision_rect.colliderect(t.rect):
             td = t.tileDef
             if td.climable:
                 touching_ladder = True
+                jumping = 0
 
 	# Enemies
     for e in enemies_list:
@@ -170,9 +188,9 @@ while not done:
 
     #### Move the level sprites (blocks and enemies)###
     for t in block_list:
-        t.rect.x = t.start_x + level.level_x_offset
+        t.rect.x = t.x + level.level_x_offset
     for e in enemies_list:
-        e.rect.x = e.start_x + level.level_x_offset
+        e.rect.x = e.x + level.level_x_offset
 
 	#### Check for deadly items ########
     if touched_deadly:

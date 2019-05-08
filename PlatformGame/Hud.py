@@ -18,6 +18,20 @@ class Hud:
 		life3 = Lives(BLOCK_SIZE*10+110, 20, 3, self)
 		all_sprites_list.add(life3)
 
+	def addKey(self, all_sprites_list):
+		key = Key()
+		all_sprites_list.add(key)
+
+class Key(pygame.sprite.Sprite):
+	def __init__(self):
+		# Call the parent class (Sprite) constructor
+		super().__init__()
+		self.image = pygame.image.load("./Assets/Items/keyYellow.png").convert()
+		self.image.set_colorkey(ITEMTRANSCOLOUR)
+		self.rect = self.image.get_rect()
+		self.rect.x = (BLOCK_SIZE*9)
+		self.rect.y = (20)
+
 class Lives(pygame.sprite.Sprite):
 	
 	lifenumber = 0

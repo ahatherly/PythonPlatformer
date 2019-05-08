@@ -1,3 +1,5 @@
+from Enemies import Enemy
+
 class Levels:
 
 	levelTiles = []
@@ -9,12 +11,28 @@ class Levels:
 	def __init__(self):
 		pass
 
-	def loadLevel(self, filename):
+	def loadLevel(self, filename, enemies):
 		file = open(filename, "r")
 		for line in file:
-			self.levelTiles.append(line)
-			if len(line) > self.level_width:
-				self.level_width = len(line)
+			if len(line) < 2:
+				# Empty
+				pass
+			elif line[0] == "!":
+				# Comment line
+				pass
+			elif line[0].isdigit():
+				# Enemy definition line
+				code = line[0]
+				leftExtent = int(line[1])
+				rightExtent = int(line[2])
+				speed = int(line[3])
+				enemySpriteType = line[4]
+				enemies[code] = Enemy(code, leftExtent, rightExtent, speed, enemySpriteType)
+			else:
+				self.levelTiles.append(line)
+				if len(line) > self.level_width:
+					self.level_width = len(line)
+
 		self.level_height = len(self.levelTiles)
 		self.level_x_offset = self.start_level_x_offset
 

@@ -39,8 +39,9 @@ class Player(pygame.sprite.Sprite):
 		self.walkImages.append(pygame.image.load("./Assets/Player/p1_walk/PNG/p1_walk10.png").convert())
 		self.walkImages.append(pygame.image.load("./Assets/Player/p1_walk/PNG/p1_walk11.png").convert())
 		self.transparentImage = pygame.image.load("./Assets/transparent.png").convert()
+		self.standing = pygame.image.load("./Assets/Player/p1_stand.png").convert()
 
-		self.image = self.walkImages[self.animation_state]
+		self.image = self.standing
 		# Set our transparent color
 		self.image.set_colorkey(TRANSCOLOUR)
 		
@@ -75,9 +76,9 @@ class Player(pygame.sprite.Sprite):
 		else:
 			self.animation_state = 0;
 			if self.facingRight:
-				self.image = self.walkImages[self.animation_state]
+				self.image = self.standing
 			else:
-				self.image = pygame.transform.flip(self.walkImages[self.animation_state], True, False)
+				self.image = pygame.transform.flip(self.standing, True, False)
 			# Set our transparent color
 			self.image.set_colorkey(TRANSCOLOUR)
 		# Temporarily invulnerable - flash on and off
