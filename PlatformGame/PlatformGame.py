@@ -62,7 +62,9 @@ for y in range(0,level.getHeight()):
 				all_sprites_list.add(block)
 
 # Add the player
-player = Player(5,7)
+#player = Player(5,7)
+player = Player(5,2)
+level.level_x_offset = -2300
 all_sprites_list.add(player)
 all_sprites_list.add(enemies_list.sprites())
 
@@ -94,6 +96,8 @@ while not done:
     touching_right = False
     touching_ladder = False
     touching_enemy = False
+    crate_touching_left = None
+    crate_touching_right = None
 
     #### Jump ####
     if jumping > 0:
@@ -119,7 +123,9 @@ while not done:
             if td.deadly:
                 touched_deadly = True
             if td.item:
-                t.touched(hud, all_sprites_list, sounds)
+                t.touched(hud, all_sprites_list, sounds, player)
+                if t.code == "c":
+                    touching_floor = True
         if left_collision_rect.colliderect(t.rect):
             td = t.tileDef
             if td.obstacle:
@@ -127,7 +133,9 @@ while not done:
             if td.deadly:
                 touched_deadly = True
             if td.item:
-                t.touched(hud, all_sprites_list, sounds)
+                t.touched(hud, all_sprites_list, sounds, player)
+                if t.code == "c":
+                    crate_touching_left = t
         if right_collision_rect.colliderect(t.rect):
             td = t.tileDef
             if td.obstacle:
@@ -135,7 +143,9 @@ while not done:
             if td.deadly:
                 touched_deadly = True
             if td.item:
-                t.touched(hud, all_sprites_list, sounds)
+                t.touched(hud, all_sprites_list, sounds, player)
+                if t.code == "c":
+                    crate_touching_right = t
         if ladder_collision_rect.colliderect(t.rect):
             td = t.tileDef
             if td.climable:
@@ -161,11 +171,19 @@ while not done:
     # Left
     if pygame.key.get_pressed()[pygame.K_a] and touching_left == False:
         player.left()
-        level.level_x_offset = level.level_x_offset + player.speed
+        speed = player.speed
+        if crate_touching_left != None:
+            speed = player.pushing_speed
+            crate_touching_left.left(speed)
+        level.level_x_offset = level.level_x_offset + speed
     # Right
     elif pygame.key.get_pressed()[pygame.K_d] and touching_right == False:
         player.right()
-        level.level_x_offset = level.level_x_offset - player.speed
+        speed = player.speed
+        if crate_touching_right != None:
+            speed = player.pushing_speed
+            crate_touching_right.right(speed)
+        level.level_x_offset = level.level_x_offset - speed
     else:
         player.walking = False;
 

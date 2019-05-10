@@ -10,12 +10,14 @@ class Player(pygame.sprite.Sprite):
 	walking = True
 	facingRight = True
 	speed = 5
+	pushing_speed = 2
 	lives = 3
 	energy = 3
 	invulnerable = 0
 	total_invulnerable = 120
 	flash_delay = 10
 	total_flash_delay = 10
+	has_key = False
 
 	walkImages = []
 

@@ -1,5 +1,5 @@
 import pygame
-from Tiles import BLOCK_SIZE, TRANSCOLOUR
+from Tiles import BLOCK_SIZE, TRANSCOLOUR, ITEMTRANSCOLOUR
 
 class Hud:
 	heartImages = []
@@ -19,8 +19,11 @@ class Hud:
 		all_sprites_list.add(life3)
 
 	def addKey(self, all_sprites_list):
-		key = Key()
-		all_sprites_list.add(key)
+		self.key = Key()
+		all_sprites_list.add(self.key)
+
+	def removeKey(self):
+		self.key.kill()
 
 class Key(pygame.sprite.Sprite):
 	def __init__(self):

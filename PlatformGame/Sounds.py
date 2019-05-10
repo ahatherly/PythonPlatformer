@@ -11,6 +11,8 @@ class Sounds:
         self.sound_objects['land'] = pygame.mixer.Sound("./Assets/Sounds/sfx_movement_jump9_landing.wav")
         self.sound_objects['dead'] = pygame.mixer.Sound("./Assets/Sounds/sfx_deathscream_robot2.wav")
         self.sound_objects['damage'] = pygame.mixer.Sound("./Assets/Sounds/sfx_sounds_damage3.wav")
+        self.sound_objects['key'] = pygame.mixer.Sound("./Assets/Sounds/sfx_sounds_powerup3.wav")
+        self.sound_objects['unlock'] = pygame.mixer.Sound("./Assets/Sounds/sfx_sounds_interaction6.wav")
 
         self.sound_objects['walk'] = pygame.mixer.Sound("./Assets/Sounds/sfx_movement_footsteps1a.wav")
         self.sound_objects['walk'].set_volume(0.2)
@@ -26,3 +28,7 @@ class Sounds:
     def walk(self):
         #self.sound_objects['walk'].play()
         pass
+    def key(self):
+        self.sound_objects['key'].play()
+    def unlock(self):
+        self.sound_objects['unlock'].play()
