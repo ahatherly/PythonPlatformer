@@ -57,7 +57,7 @@ class Lives(pygame.sprite.Sprite):
 		self.rect.x = (x)
 		self.rect.y = (y)
 
-	def update(self, sounds):
+	def update(self, sounds, block_list):
 		self.updateDelay = self.updateDelay - 1
 		if self.updateDelay == 0:
 			self.updateDelay = 30

@@ -173,17 +173,23 @@ while not done:
         player.left()
         speed = player.speed
         if crate_touching_left != None:
-            speed = player.pushing_speed
-            crate_touching_left.left(speed)
-        level.level_x_offset = level.level_x_offset + speed
+            if not crate_touching_right.falling:
+                speed = player.pushing_speed
+                crate_touching_left.left(speed)
+                level.level_x_offset = level.level_x_offset + speed
+        else:
+            level.level_x_offset = level.level_x_offset + speed
     # Right
     elif pygame.key.get_pressed()[pygame.K_d] and touching_right == False:
         player.right()
         speed = player.speed
         if crate_touching_right != None:
-            speed = player.pushing_speed
-            crate_touching_right.right(speed)
-        level.level_x_offset = level.level_x_offset - speed
+            if not crate_touching_right.falling:
+                speed = player.pushing_speed
+                crate_touching_right.right(speed)
+                level.level_x_offset = level.level_x_offset - speed
+        else:
+            level.level_x_offset = level.level_x_offset - speed
     else:
         player.walking = False;
 
@@ -220,14 +226,20 @@ while not done:
     # Add the background
     screen.blit(backGround.image, backGround.rect)
     # Draw all the spites
-    all_sprites_list.update(sounds)
+    all_sprites_list.update(sounds, block_list)
     all_sprites_list.draw(screen)
+
     # Draw collision detectors (troubleshooting)
     #pygame.draw.rect(screen, BLACK, down_collision_rect)
     #pygame.draw.rect(screen, BLACK, left_collision_rect)
     #pygame.draw.rect(screen, BLACK, right_collision_rect)
     #pygame.draw.rect(screen, BLACK, ladder_collision_rect)
- 
+    #for t in block_list:
+    #    if t.tileDef.item:
+    #        if t.code == "c":
+    #            pygame.draw.rect(screen, BLACK, t.down_collision_rect)
+    #            pygame.draw.rect(screen, BLACK, t.down_collision_rect_large)
+
     # Update the screen with what we've drawn.
     pygame.display.flip()
  
