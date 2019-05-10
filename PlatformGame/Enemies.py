@@ -60,7 +60,7 @@ class Enemy(pygame.sprite.Sprite):
 		self.rect = self.image.get_rect()
 
 	
-	def update(self, sounds, block_list):
+	def update(self, sounds, block_list, screen):
 		if self.movingRight:
 			if self.x < self.rightMovementExtent:
 				self.x = self.x + self.speed

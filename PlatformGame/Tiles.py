@@ -21,6 +21,8 @@ class Block(pygame.sprite.Sprite):
         self.image = t.load_sprite()
         self.tileDef = t
         transColor = TRANSCOLOUR
+        if code == "d":
+            transColor = ITEMTRANSCOLOUR
         self.image.set_colorkey(transColor)
         # Update the position of this object by setting the values
         # of rect.x and rect.y
@@ -79,3 +81,5 @@ TILELIST["/"] = Tiles("/", "Tiles/grassHillLeft.png")
 TILELIST["\\"] = Tiles("\\", "Tiles/grassHillRight.png")
 TILELIST["|"] = Tiles("|", "Tiles/ladder_mid.png", False, False, True)
 TILELIST["^"] = Tiles("^", "Tiles/ladder_top.png", False, False, True)
+TILELIST["D"] = Tiles("D", "Tiles/door_openMid.png", False, False)
+TILELIST["d"] = Tiles("d", "Tiles/door_openTop.png", False, False)

@@ -1,7 +1,3 @@
-
-"""
-
-"""
 import pygame
 import random
 from Tiles import Tiles, Block, Background, TILELIST, TRANSCOLOUR, BLOCK_SIZE, WHITE, BLACK
@@ -11,10 +7,12 @@ from Sounds import Sounds
 from Hud import Hud
 from Enemies import Enemy
 from Items import Item, ITEM_CODES
+from Menus import Menus
 
 # Initialize Pygame
 sounds = Sounds()
 pygame.init()
+pygame.display.set_caption("Alien Escape!")
 
 
 # Set the height and width of the screen
@@ -22,9 +20,16 @@ screen_width = 1100
 screen_height = 770
 screen = pygame.display.set_mode([screen_width, screen_height])
 gravity = 7
+exited = False
+
+# Start with our main app page before launching the game...
+menus = Menus(screen)
+menus.startMenu()
+
+if menus.exited:
+	exited = True
 
 enemies = {}
-
 level = Levels()
 level.loadLevel("Level1.txt", enemies)
  
@@ -62,9 +67,9 @@ for y in range(0,level.getHeight()):
 				all_sprites_list.add(block)
 
 # Add the player
-#player = Player(5,7)
-player = Player(5,2)
-level.level_x_offset = -2300
+player = Player(5,7)
+#player = Player(5,2)
+#level.level_x_offset = -3000
 all_sprites_list.add(player)
 all_sprites_list.add(enemies_list.sprites())
 
@@ -74,45 +79,43 @@ hud = Hud(player, all_sprites_list)
 # And the background
 backGround = Background()
 
-# Loop until the user clicks the close button.
-done = False
- 
 # Used to manage how fast the screen updates
 clock = pygame.time.Clock()
  
 score = 0
 jumping = 0
 falling = False
+won = False
+died = False
 
 # -------- Main Program Loop -----------
-while not done:
+while not exited and not won and not died:
     for event in pygame.event.get(): 
         if event.type == pygame.QUIT: 
-            done = True
+            exited = True
 
     touched_deadly = False
     touching_floor = False
+    touching_ceiling = False
     touching_left = False
     touching_right = False
     touching_ladder = False
+    touching_exit = False
     touching_enemy = False
     crate_touching_left = None
     crate_touching_right = None
 
-    #### Jump ####
-    if jumping > 0:
-        player.rect.y = player.rect.y - jumping
-        jumping = jumping - 1
-
-
     #### Collision Detection ####
     down_collision_rect = pygame.Rect(player.rect.x+21, player.rect.y+85, 32, 10)
-    ladder_collision_rect = pygame.Rect(player.rect.x+31, player.rect.y+85, 12, 10)
+    central_collision_rect = pygame.Rect(player.rect.x+31, player.rect.y+85, 12, 10)
     left_collision_rect = pygame.Rect(player.rect.x+5, player.rect.y+12, 10, 70)
     right_collision_rect = pygame.Rect(player.rect.x+58, player.rect.y+12, 10, 70)
+    up_collision_rect = pygame.Rect(player.rect.x+21, player.rect.y, 32, 10)
     
     # Blocks
-    for t in block_list:
+    checked = 0
+    for t in pygame.sprite.spritecollide(player, block_list, False):
+        checked = checked + 1
         if down_collision_rect.colliderect(t.rect):
             td = t.tileDef
             if td.obstacle:
@@ -126,6 +129,17 @@ while not done:
                 t.touched(hud, all_sprites_list, sounds, player)
                 if t.code == "c":
                     touching_floor = True
+        if up_collision_rect.colliderect(t.rect):
+            td = t.tileDef
+            if td.obstacle:
+                touching_ceiling = True
+                jumping = 0
+            if td.deadly:
+                touched_deadly = True
+            if td.item:
+                t.touched(hud, all_sprites_list, sounds, player)
+                if t.code == "c":
+                    touching_ceiling = True
         if left_collision_rect.colliderect(t.rect):
             td = t.tileDef
             if td.obstacle:
@@ -146,15 +160,22 @@ while not done:
                 t.touched(hud, all_sprites_list, sounds, player)
                 if t.code == "c":
                     crate_touching_right = t
-        if ladder_collision_rect.colliderect(t.rect):
+        if central_collision_rect.colliderect(t.rect):
             td = t.tileDef
             if td.climable:
                 touching_ladder = True
                 jumping = 0
+            if td.code == "D":
+                touching_exit = True
+
+    #### Jump ####
+    if jumping > 0:
+        player.rect.y = player.rect.y - jumping
+        jumping = jumping - 1
 
 	# Enemies
     for e in enemies_list:
-        if down_collision_rect.colliderect(e.rect):
+        if player.rect.colliderect(e.rect):
             touching_enemy = True
 
     if touching_enemy:
@@ -197,9 +218,11 @@ while not done:
     if pygame.key.get_pressed()[pygame.K_w]:
         if touching_ladder:
             player.rect.y = player.rect.y - 5
-        elif touching_floor:
+        elif touching_floor and jumping == 0:
             jumping = 20
             sounds.jump()
+        if touching_exit:
+            won = True
 
     # Down
     if pygame.key.get_pressed()[pygame.K_s]:
@@ -208,7 +231,7 @@ while not done:
 
     # Exit
     if pygame.key.get_pressed()[pygame.K_ESCAPE]:
-        done = True
+        exited = True
 
     #### Move the level sprites (blocks and enemies)###
     for t in block_list:
@@ -220,20 +243,26 @@ while not done:
     if touched_deadly:
         player.dead(sounds, level)
 
+	# Check for player death
+    if player.is_dead:
+        died = True
+
 	####### Paint the screen ###########
     # Clear the screen
     screen.fill(WHITE)
     # Add the background
     screen.blit(backGround.image, backGround.rect)
-    # Draw all the spites
-    all_sprites_list.update(sounds, block_list)
+    # Update sprites (animate)
+    all_sprites_list.update(sounds, block_list, screen)
+    # Draw all the sprites
     all_sprites_list.draw(screen)
 
     # Draw collision detectors (troubleshooting)
     #pygame.draw.rect(screen, BLACK, down_collision_rect)
+    #pygame.draw.rect(screen, BLACK, up_collision_rect)
     #pygame.draw.rect(screen, BLACK, left_collision_rect)
     #pygame.draw.rect(screen, BLACK, right_collision_rect)
-    #pygame.draw.rect(screen, BLACK, ladder_collision_rect)
+    #pygame.draw.rect(screen, BLACK, central_collision_rect)
     #for t in block_list:
     #    if t.tileDef.item:
     #        if t.code == "c":

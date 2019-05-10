@@ -57,7 +57,7 @@ class Lives(pygame.sprite.Sprite):
 		self.rect.x = (x)
 		self.rect.y = (y)
 
-	def update(self, sounds, block_list):
+	def update(self, sounds, block_list, screen):
 		self.updateDelay = self.updateDelay - 1
 		if self.updateDelay == 0:
 			self.updateDelay = 30
@@ -67,6 +67,7 @@ class Lives(pygame.sprite.Sprite):
 
 			if lives < self.lifenumber:
 				self.image = self.hud.heartImages[0]
+				self.image.set_colorkey(TRANSCOLOUR)
 			elif lives == self.lifenumber:
 				self.image = self.hud.heartImages[energy]
 				self.image.set_colorkey(TRANSCOLOUR)

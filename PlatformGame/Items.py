@@ -32,6 +32,7 @@ class Item(pygame.sprite.Sprite):
 			transColor = ITEMTRANSCOLOUR
 
 		self.tileDef = Attributes()
+		self.tileDef.code = code
 
 		self.image.set_colorkey(transColor)
 		self.rect = self.image.get_rect()
@@ -56,7 +57,7 @@ class Item(pygame.sprite.Sprite):
 	def right(self, amount):
 		self.x = self.x + amount
 
-	def update(self, sounds, block_list):
+	def update(self, sounds, block_list, screen):
 		if self.code == CRATE:
 			# Check for falling
 			#### Collision Detection ####
@@ -78,7 +79,6 @@ class Item(pygame.sprite.Sprite):
 						if distance < fall_speed:
 							fall_speed = distance
 			if self.falling:
-				print("Falling!")
 				self.y = self.y + fall_speed
 				self.rect.y = self.rect.y + fall_speed
 			self.falling = falling
@@ -89,3 +89,4 @@ class Attributes:
 	climable = False
 	enemy = False
 	item = True
+	code = ""

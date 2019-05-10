@@ -8,6 +8,7 @@ class Player(pygame.sprite.Sprite):
 	animation_delay = 2
 	animation_delay_count = 0
 	walking = True
+	stopped = True
 	facingRight = True
 	speed = 5
 	pushing_speed = 2
@@ -18,6 +19,7 @@ class Player(pygame.sprite.Sprite):
 	flash_delay = 10
 	total_flash_delay = 10
 	has_key = False
+	is_dead = False
 
 	walkImages = []
 
@@ -57,7 +59,7 @@ class Player(pygame.sprite.Sprite):
 		self.rect.x = (self.x*BLOCK_SIZE)
 		self.rect.y = (self.y*BLOCK_SIZE-25)
 
-	def update(self, sounds, block_list):
+	def update(self, sounds, block_list, screen):
 		if self.walking:
 			if self.animation_delay_count == self.animation_delay:
 				self.animation_delay_count = 0
@@ -76,13 +78,15 @@ class Player(pygame.sprite.Sprite):
 			else:
 				self.animation_delay_count = self.animation_delay_count + 1
 		else:
-			self.animation_state = 0;
-			if self.facingRight:
-				self.image = self.standing
-			else:
-				self.image = pygame.transform.flip(self.standing, True, False)
-			# Set our transparent color
-			self.image.set_colorkey(TRANSCOLOUR)
+			if (not self.stopped) or self.invulnerable:
+				self.stopped = True
+				self.animation_state = 0;
+				if self.facingRight:
+					self.image = self.standing
+				else:
+					self.image = pygame.transform.flip(self.standing, True, False)
+				# Set our transparent color
+				self.image.set_colorkey(TRANSCOLOUR)
 		# Temporarily invulnerable - flash on and off
 		if self.invulnerable > 0:
 			self.invulnerable = self.invulnerable - 1
@@ -96,20 +100,25 @@ class Player(pygame.sprite.Sprite):
 
 	def right(self):
 		self.walking = True
+		self.stopped = False
 		self.facingRight = True
 		#self.rect.x = self.rect.x + self.speed
 	
 	def left(self):
 		self.walking = True
+		self.stopped = False
 		self.facingRight = False
 		#self.rect.x = self.rect.x - self.speed
 
 	def dead(self, sounds, level):
 		sounds.dead()
-		self.lives = self.lives - 1
-		self.energy = 3
-		self.reset(5, 7)
-		level.level_x_offset = level.start_level_x_offset
+		if self.lives == 0:
+			self.is_dead = True
+		else:
+			self.lives = self.lives - 1
+			self.energy = 3
+			self.reset(5, 7)
+			level.level_x_offset = level.start_level_x_offset
 
 	def energyDown(self, sounds, level):
 		self.energy = self.energy - 1
