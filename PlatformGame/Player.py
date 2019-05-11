@@ -112,10 +112,10 @@ class Player(pygame.sprite.Sprite):
 
 	def dead(self, sounds, level):
 		sounds.dead()
+		self.lives = self.lives - 1
 		if self.lives == 0:
 			self.is_dead = True
 		else:
-			self.lives = self.lives - 1
 			self.energy = 3
 			self.reset(5, 7)
 			level.level_x_offset = level.start_level_x_offset

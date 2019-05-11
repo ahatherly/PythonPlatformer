@@ -14,6 +14,9 @@ class Sounds:
         self.sound_objects['key'] = pygame.mixer.Sound("./Assets/Sounds/sfx_sounds_powerup3.wav")
         self.sound_objects['unlock'] = pygame.mixer.Sound("./Assets/Sounds/sfx_sounds_interaction6.wav")
 
+        self.sound_objects['gameover'] = pygame.mixer.Sound("./Assets/Sounds/sfx_sound_mechanicalnoise2.wav")
+        self.sound_objects['won'] = pygame.mixer.Sound("./Assets/Sounds/sfx_sound_poweron.wav")
+
         self.sound_objects['walk'] = pygame.mixer.Sound("./Assets/Sounds/sfx_movement_footsteps1a.wav")
         self.sound_objects['walk'].set_volume(0.2)
 
@@ -32,3 +35,7 @@ class Sounds:
         self.sound_objects['key'].play()
     def unlock(self):
         self.sound_objects['unlock'].play()
+    def gameover(self):
+        self.sound_objects['gameover'].play()
+    def won(self):
+        self.sound_objects['won'].play()

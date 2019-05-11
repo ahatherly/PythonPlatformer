@@ -1,11 +1,12 @@
 import pygame
-from Tiles import WHITE, TRANSCOLOUR
+from Tiles import WHITE, BLACK, TRANSCOLOUR
 
 class Menus:
 
 	exited = False
 
 	def __init__(self, screen):
+		self.hugefont = pygame.font.Font("./Assets/NemoyBold.ttf", 100)
 		self.bigfont = pygame.font.Font("./Assets/NemoyBold.ttf", 100)
 		self.font = pygame.font.Font("./Assets/NemoyBold.ttf", 60)
 		self.screen = screen
@@ -44,8 +45,48 @@ class Menus:
 
 			# Limit to 30 frames per second
 			clock.tick(30)
-		#self.text = game.op_train.text
-		#self.image = self.font.render(self.text, 1, (0, 255, 255))
+
+	def messageScreen(self, message):
+		started = False
+		screen = self.screen
+		clock = pygame.time.Clock()
+		text = self.hugefont.render(message, True, (0, 128, 0))
+		text2 = self.font.render("Press Space", True, (0, 128, 0))
+		textScale = 0.0
+		textGrowthRate = 0.02
+
+		while not self.exited and not started:
+			for event in pygame.event.get():
+				if event.type == pygame.QUIT:
+					self.exited = True
+
+			if pygame.key.get_pressed()[pygame.K_ESCAPE]:
+				self.exited = True
+			elif pygame.key.get_pressed()[pygame.K_SPACE]:
+				started = True
+
+			####### Paint the screen ###########
+			screen.fill(BLACK)
+			
+			if textScale < 1:
+				textScale = textScale + textGrowthRate
+				if textScale > 1:
+					textScale = 1
+
+			scaledText = pygame.transform.rotozoom(text, 0, textScale)
+
+			x_offset = (text.get_width() - scaledText.get_width()) / 2
+			y_offset = (text.get_height() - scaledText.get_height()) / 2
+
+			screen.blit(scaledText,(200+x_offset, 200+y_offset))
+			
+			if textScale == 1:
+				screen.blit(text2,(320, 320))
+
+			pygame.display.flip()
+
+			# Limit to 30 frames per second
+			clock.tick(30)
 
 class Background(pygame.sprite.Sprite):
 	def __init__(self):

@@ -21,6 +21,9 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="GameLoop.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Items.py" />
     <Compile Include="Enemies.py">
       <SubType>Code</SubType>

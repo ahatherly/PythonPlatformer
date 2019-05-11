@@ -22,17 +22,17 @@ class Item(pygame.sprite.Sprite):
 		self.y = y
 		# Set our transparent color
 		transColor = TRANSCOLOUR
+		self.tileDef = Attributes()
+		self.tileDef.code = code
 
 		if code == CRATE:
 			self.image = pygame.image.load("./Assets/Tiles/box.png").convert()
 		elif code == LOCK:
 			self.image = pygame.image.load("./Assets/Tiles/lock_yellow.png").convert()
+			self.tileDef.obstacle = True
 		else:
 			self.image = pygame.image.load("./Assets/Items/keyYellow.png").convert()
 			transColor = ITEMTRANSCOLOUR
-
-		self.tileDef = Attributes()
-		self.tileDef.code = code
 
 		self.image.set_colorkey(transColor)
 		self.rect = self.image.get_rect()

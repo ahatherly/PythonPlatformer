@@ -2,14 +2,13 @@ from Enemies import Enemy
 
 class Levels:
 
-	levelTiles = []
 	level_width = 0
 	level_height = 0
 	start_level_x_offset = -160
 	level_x_offset = -160
 
 	def __init__(self):
-		pass
+		self.levelTiles = []
 
 	def loadLevel(self, filename, enemies):
 		file = open(filename, "r")
