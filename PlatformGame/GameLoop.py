@@ -179,7 +179,7 @@ class GameLoop(object):
 				player.left()
 				speed = player.speed
 				if crate_touching_left != None:
-					if not crate_touching_right.falling:
+					if not crate_touching_left.falling:
 						speed = player.pushing_speed
 						crate_touching_left.left(speed)
 						level.level_x_offset = level.level_x_offset + speed

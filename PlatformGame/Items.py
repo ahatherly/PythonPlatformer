@@ -69,7 +69,7 @@ class Item(pygame.sprite.Sprite):
 			for t in block_list:
 				if self.down_collision_rect.colliderect(t.rect):
 					td = t.tileDef
-					if td.obstacle:
+					if td.obstacle or td.code == CRATE:
 						falling = False
 				if self.down_collision_rect_large.colliderect(t.rect):
 					# Check for imminent impact to avoid falling partly into the floor
